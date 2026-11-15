@@ -4,11 +4,12 @@
 //   dist/shardlight.html             everything in one file (script inlined), for hosts that take a single page
 //
 //   node tools/build.mjs
+import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-const ROOT = new URL("..", import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const OUT = join(ROOT, "dist");
 mkdirSync(OUT, { recursive: true });
 const r = await build({ entryPoints: [join(ROOT, "src/main.js")], bundle: true, format: "esm", minifyWhitespace: !process.argv.includes("--debug"), minifySyntax: !process.argv.includes("--debug"), minifyIdentifiers: false, write: false, target: "es2020", legalComments: "none" });
