@@ -9,3 +9,6 @@ A side-scrolling open-world ARPG built on pixelfx (vendored in `vendor/pixelfx`,
   `node vendor/pixelfx/tools/index.mjs` to register them.
 - Effects are only ever referenced through `src/pfx.js`. Never use `Math.random` inside an effect file (game code may).
 - Screenshots: `node tools/shot.mjs` (headless, Node only) or `node tools/browser.mjs` (real Chromium).
+- Desktop: `npm run desktop` runs the Electron app; `npm run dist:linux|win|mac|mac-zip|all` packages into
+  `release/` (gitignored). Electron's main process is `desktop/main.cjs`; packaging config is the `build` field of
+  package.json. Windows builds on Linux need Wine; the macOS .dmg and universal build need a Mac.

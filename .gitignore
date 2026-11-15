@@ -5,3 +5,4 @@ sheets/
 shots/
 .DS_Store
 *.log
+release/

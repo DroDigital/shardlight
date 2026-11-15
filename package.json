@@ -16,9 +16,113 @@
     "coverage": "node tools/coverage.mjs",
     "fx:check": "node vendor/pixelfx/tools/check.mjs",
     "fx:render": "node vendor/pixelfx/tools/render.mjs",
-    "fx:gallery": "node vendor/pixelfx/tools/serve.mjs"
+    "fx:gallery": "node vendor/pixelfx/tools/serve.mjs",
+    "icon": "node tools/icon.mjs",
+    "desktop": "npm run build && electron .",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist:all": "npm run build && electron-builder --linux --win --publish never && electron-builder --mac zip --x64 --arm64 --publish never",
+    "dist:mac-zip": "npm run build && electron-builder --mac zip --x64 --arm64 --publish never"
   },
   "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
     "esbuild": "^0.25.10"
+  },
+  "main": "desktop/main.cjs",
+  "author": {
+    "name": "DroDigital"
+  },
+  "homepage": "https://github.com/DroDigital/2d-open-world-arpg",
+  "build": {
+    "appId": "gg.drodigital.shardlight",
+    "productName": "Shardlight",
+    "copyright": "Copyright (c) 2026 DroDigital",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "desktop/**",
+      "dist/shardlight.html",
+      "package.json",
+      "!**/*.map"
+    ],
+    "asar": true,
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.role-playing-games",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "identity": "-",
+      "hardenedRuntime": false
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Shardlight"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-win-portable.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Game",
+      "icon": "build/icon.png",
+      "synopsis": "An open-world action RPG drawn in pixelfx",
+      "maintainer": "DroDigital",
+      "executableName": "shardlight"
+    }
   }
 }
