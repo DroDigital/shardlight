@@ -4,15 +4,16 @@
 //
 //   node tools/coverage.mjs
 
+import { fileURLToPath } from "node:url";
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 import { FX } from "../src/pfx.js";
 import { SKILLS } from "../src/data/skills.js";
 import { ENEMIES } from "../src/data/enemies.js";
 import { WEAPONS } from "../src/data/weapons.js";
 import { STATUS } from "../src/game/status.js";
 
-const ROOT = new URL("..", import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const files = [];
 const walk = (d) => {
   for (const f of readdirSync(d)) {
@@ -29,7 +30,7 @@ const LABEL = {
   "data/items.js": "items", "game/enemies.js": "enemies", "game/npcs.js": "people",
 };
 for (const f of files) {
-  const src = readFileSync(f, "utf8"), rel = relative(join(ROOT, "src"), f);
+  const src = readFileSync(f, "utf8"), rel = relative(join(ROOT, "src"), f).split(sep).join("/");
   for (const m of src.matchAll(/["'`]([a-z]+\/[a-z0-9-]+)["'`]/g)) if (where[m[1]] && LABEL[rel]) where[m[1]].add(LABEL[rel]);
   // weather is named without its category in the data
   if (rel === "world/biomes.js" || rel === "game/director.js") for (const m of src.matchAll(/"([a-z-]+)"/g)) if (FX["weather/" + m[1]]) where["weather/" + m[1]].add("weather");

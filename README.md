@@ -16,6 +16,29 @@ npm start            # http://localhost:8080 - plays straight from the source, n
 npm run build        # dist/index.html + game.js, and dist/shardlight.html (one file)
 ```
 
+## Desktop builds
+
+Shardlight also ships as a desktop app for **macOS, Windows and Linux** (an Electron window around the single-file
+build: 1280 x 720 to start, any size after, F11 or Alt+Enter for fullscreen, saves kept in the app's data folder).
+
+```bash
+npm run desktop      # run it as a desktop app, from source
+npm run dist:linux   # release/Shardlight-<v>-linux-x86_64.AppImage, -amd64.deb, -x64.tar.gz
+npm run dist:win     # release/Shardlight-<v>-win-x64.exe (installer) and -win-portable.exe (on Linux this needs Wine)
+npm run dist:mac     # release/Shardlight-<v>-mac-universal.dmg and .zip (run on a Mac)
+npm run dist:mac-zip # release/Shardlight-<v>-mac-x64.zip and -mac-arm64.zip (works from Linux or Windows too)
+npm run dist:all     # Linux, Windows and the macOS zips, from one Linux machine
+```
+
+The `desktop` workflow in `.github/workflows` builds each platform on its own OS on every push and pull request and
+uploads the results as workflow artifacts; pushing a tag like `v1.0.0` also attaches them to a GitHub release.
+
+The builds are not code-signed (no certificates are configured). The first launch asks for a click past the system's
+warning: on Windows, *More info* then *Run anyway*; on macOS, right-click the app and choose *Open* (a zip built off
+a Mac may also need `xattr -cr Shardlight.app` once). To sign, set electron-builder's `CSC_LINK` and
+`CSC_KEY_PASSWORD` (and Apple's notarization variables) in the workflow's secrets. The app icon is drawn in code by
+`tools/icon.mjs`.
+
 No assets: there are no images or sounds in this repository. The world, the trees, the people, the music and every
 effect are generated when the game runs.
 
@@ -99,6 +122,7 @@ npm test             # a headless playtest: every weapon, skill, foe, status, wa
 npm run coverage     # every pixelfx effect is used somewhere, and where (fails if one isn't)
 node tools/shot.mjs  # screenshots from a headless run, into shots/
 node tools/browser.mjs   # the real game in headless Chromium, with frame times
+xvfb-run -a node tools/desktop-check.cjs release/linux-unpacked/shardlight   # the packaged app starts and plays
 ```
 
 The game holds 60 frames a second in Chromium; a frame takes 3 to 11 ms to render, depending on the weather.
